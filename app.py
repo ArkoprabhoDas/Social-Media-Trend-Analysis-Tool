@@ -10,11 +10,7 @@ def run_ipynb(notebook_path):
      
     with open(notebook_path, 'r', encoding='utf-8') as nb_file: 
         notebook = nbformat.read(nb_file, as_version=4) 
- 
-    
     execute_preprocessor = ExecutePreprocessor(timeout=-1, kernel_name='python3') 
- 
-    
     try: 
         execute_preprocessor.preprocess(notebook, {'metadata': {'path': '.'}}) 
     except Exception as e: 
@@ -44,6 +40,10 @@ def deleteFile():
         os.remove("region.txt")
     if os.path.exists("age.txt"):
         os.remove("age.txt")
+    if os.path.exists("postKeyword.txt"):
+        os.remove("postKeyword.txt")
+    if os.path.exists("post.txt"):
+        os.remove("post.txt")
 
 
 st.title("Welcome")
@@ -58,7 +58,6 @@ elif(option == "Region"):
     optionsRegion = ["Southern Europe (GR, IT, MT, PT, ES)","Germanic countries (DE, AT, CH)","Great Britain & Ireland (GB, IE)","Nordic countries (NO, FI, DK, SE)","Eastern Europe (HU, PL, RO, SK, CZ)","Hispanic LatAm (CL, CO, AR, MX)","Australasia (AU, NZ)"]
     option = st.selectbox("Select Region:", optionsRegion)
 if st.button("Submit") and len(keyword) != 0:
-    deleteFile()
     with open("keyword.txt","w") as file:
         file.write(keyword)
     if(optionSelected != "No age"):
@@ -68,11 +67,11 @@ if st.button("Submit") and len(keyword) != 0:
         with open("region.txt","w") as file:
             file.write(option)
     with st.spinner("Searching through social media.......") :
-        notebook_path_pintrest = "pintrest.ipynb"
+        notebook_path_pintrest = "ipynb/pintrest.ipynb"
         thread1 = threading.Thread(target=run_ipynb, args = (notebook_path_pintrest,))
-        notebook_path_facebook = "facebook.ipynb"
+        notebook_path_facebook = "ipynb/facebook.ipynb"
         thread2 = threading.Thread(target=run_ipynb, args = (notebook_path_facebook,))
-        notebook_path_Reddit = "Reddit.ipynb"
+        notebook_path_Reddit = "ipynb/Reddit.ipynb"
         thread3 = threading.Thread(target=run_ipynb, args = (notebook_path_Reddit,))
         thread1.start()
         thread2.start()
@@ -81,13 +80,13 @@ if st.button("Submit") and len(keyword) != 0:
         thread2.join()
         thread3.join()
     with st.spinner("Getting relevant post and topic.......") :
-        run_ipynb("dataScanning.ipynb")
+        run_ipynb("ipynb/dataScanning.ipynb")
     col1, col2 = st.columns(2)
     with col1:
         showPost()
     with col2:
         showKeyword()
-
+    deleteFile()
     
 
 
