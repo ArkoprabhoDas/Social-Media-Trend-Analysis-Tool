@@ -44,50 +44,84 @@ def deleteFile():
         os.remove("postKeyword.txt")
     if os.path.exists("post.txt"):
         os.remove("post.txt")
+    if os.path.exists("country.txt"):
+        os.remove("country.txt")
+    if os.path.exists("year.txt"):
+        os.remove("year.txt")
 
-
-st.title("Welcome")
-keyword = st.text_input("Enter the keyword : ")
-optionsAge = ["No age","18-24","25-34","35-44","45-49","50-54","55-64"]
-optionSelected = st.selectbox("Select an age option", optionsAge)
-option = st.selectbox("Select an option:",["None","Region","Country"])
-if(option == "Country"):
-    optionsCountry = ["United States","Canada","Italy","Spain","Germany","France","Colombia","Argentina","Mexico","Brazil"]
-    option = st.selectbox("Select Country:", optionsCountry)
-elif(option == "Region"):
-    optionsRegion = ["Southern Europe (GR, IT, MT, PT, ES)","Germanic countries (DE, AT, CH)","Great Britain & Ireland (GB, IE)","Nordic countries (NO, FI, DK, SE)","Eastern Europe (HU, PL, RO, SK, CZ)","Hispanic LatAm (CL, CO, AR, MX)","Australasia (AU, NZ)"]
-    option = st.selectbox("Select Region:", optionsRegion)
-if st.button("Submit") and len(keyword) != 0:
-    with open("keyword.txt","w") as file:
-        file.write(keyword)
-    if(optionSelected != "No age"):
-        with open("age.txt","w") as file:
-            file.write(optionSelected)
-    if(option != "None"):
-        with open("region.txt","w") as file:
-            file.write(option)
-    with st.spinner("Searching through social media.......") :
-        notebook_path_pintrest = "ipynb/pintrest.ipynb"
-        thread1 = threading.Thread(target=run_ipynb, args = (notebook_path_pintrest,))
-        notebook_path_facebook = "ipynb/facebook.ipynb"
-        thread2 = threading.Thread(target=run_ipynb, args = (notebook_path_facebook,))
-        notebook_path_Reddit = "ipynb/Reddit.ipynb"
-        thread3 = threading.Thread(target=run_ipynb, args = (notebook_path_Reddit,))
-        thread1.start()
-        thread2.start()
-        thread3.start()
-        thread1.join()
-        thread2.join()
-        thread3.join()
-    with st.spinner("Getting relevant post and topic.......") :
-        run_ipynb("ipynb/dataScanning.ipynb")
-    col1, col2 = st.columns(2)
-    with col1:
-        showPost()
-    with col2:
-        showKeyword()
-    deleteFile()
+def posts():
+    st.title("Welcome")
+    keyword = st.text_input("Enter the keyword : ")
+    optionsAge = ["No age","18-24","25-34","35-44","45-49","50-54","55-64"]
+    optionSelected = st.selectbox("Select an age option", optionsAge)
+    option = st.selectbox("Select an region or country:",["None","Region","Country"])
+    if(option == "Country"):
+        optionsCountry = ["United States","Canada","Italy","Spain","Germany","France","Colombia","Argentina","Mexico","Brazil"]
+        option = st.selectbox("Select Country:", optionsCountry)
+    elif(option == "Region"):
+        optionsRegion = ["Southern Europe (GR, IT, MT, PT, ES)","Germanic countries (DE, AT, CH)","Great Britain & Ireland (GB, IE)","Nordic countries (NO, FI, DK, SE)","Eastern Europe (HU, PL, RO, SK, CZ)","Hispanic LatAm (CL, CO, AR, MX)","Australasia (AU, NZ)"]
+        option = st.selectbox("Select Region:", optionsRegion)
+    if st.button("Submit") and len(keyword) != 0:
+        with open("keyword.txt","w") as file:
+            file.write(keyword)
+        if(optionSelected != "No age"):
+            with open("age.txt","w") as file:
+                file.write(optionSelected)
+        if(option != "None"):
+            with open("region.txt","w") as file:
+                file.write(option)
+        with st.spinner("Searching through social media.......") :
+            notebook_path_pintrest = "ipynb/pintrest.ipynb"
+            thread1 = threading.Thread(target=run_ipynb, args = (notebook_path_pintrest,))
+            notebook_path_facebook = "ipynb/facebook.ipynb"
+            thread2 = threading.Thread(target=run_ipynb, args = (notebook_path_facebook,))
+            notebook_path_Reddit = "ipynb/Reddit.ipynb"
+            thread3 = threading.Thread(target=run_ipynb, args = (notebook_path_Reddit,))
+            thread1.start()
+            thread2.start()
+            thread3.start()
+            thread1.join()
+            thread2.join()
+            thread3.join()
+        with st.spinner("Getting relevant post and topic.......") :
+            run_ipynb("ipynb/dataScanning.ipynb")
+        col1, col2 = st.columns(2)
+        with col1:
+            showPost()
+        with col2:
+            showKeyword()
+        deleteFile()
     
+def currentandpast():
+    st.title("Welcome")
+    options = ["Today","Past Year"]
+    optionSelected = st.selectbox("Select an age option", options)
+    if optionSelected == "Today":
+        country = st.text_input("Enter the Country code : ")
+    elif optionSelected == "Past Year":
+        year = st.text_input("Enter the Year(last 2014) : ")
+        country = st.text_input("Enter the Country code : ")
+    if st.button("Submit") and len(country) != 0:
+        with open("country.txt","w") as file:
+            file.write(country)
+        if optionSelected == "Today":
+            with st.spinner("Getting current trends..........") :
+                run_ipynb("ipynb/today.ipynb")
+            showPost()
+            deleteFile()
+        elif optionSelected == "Past Year":
+            with open("year.txt","w") as file:
+                file.write(year)
+            with st.spinner("Getting past trends..........") :
+                run_ipynb("ipynb/past.ipynb")
+            showPost()
+            deleteFile()
 
+st.sidebar.title("Trends")
+pages = ["Keyword", "Current Or Past"]
 
- 
+selection = st.sidebar.radio("Go to", pages)
+if selection == "Current Or Past":
+    currentandpast()
+elif selection == "Keyword":
+    posts()
