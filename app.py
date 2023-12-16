@@ -117,11 +117,29 @@ def currentandpast():
             showPost()
             deleteFile()
 
+
+def googleTrends():
+    st.title("Welcome")
+    keyword = st.text_input("Enter the keyword : ")
+    region = st.text_input("Enter the country : ")
+    if st.button("Submit") and len(keyword) != 0:
+        with open("keyword.txt","w") as file:
+            file.write(keyword)
+        if(len(region) != 0):
+            with open("region.txt","w") as file:
+                file.write(region)
+        with st.spinner("Getting current trends from google..........") :
+            run_ipynb("ipynb/googleTrends.ipynb")
+        showKeyword()
+        deleteFile()
+
 st.sidebar.title("Trends")
-pages = ["Keyword", "Current Or Past"]
+pages = ["Social Media", "Current Or Past", "Google"]
 
 selection = st.sidebar.radio("Go to", pages)
 if selection == "Current Or Past":
     currentandpast()
-elif selection == "Keyword":
+elif selection == "Social Media":
     posts()
+elif selection == "Google":
+    googleTrends()
