@@ -121,7 +121,7 @@ def currentandpast():
 def googleTrends():
     st.title("Welcome")
     keyword = st.text_input("Enter the keyword : ")
-    region = st.text_input("Enter the country : ")
+    region = st.text_input("Enter the country code(Empty means world wide) : ")
     if st.button("Submit") and len(keyword) != 0:
         with open("keyword.txt","w") as file:
             file.write(keyword)
