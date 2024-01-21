@@ -68,5 +68,6 @@ Table of Contents
 There is also some additional features
 
  • Getting the past and present trends of a specific country
+ 
  • Scraping google trends to get the relevents search topics
 
