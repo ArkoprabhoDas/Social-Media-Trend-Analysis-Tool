@@ -65,5 +65,7 @@ Table of Contents
   The Social Media Trend Analysis Tool provides a comprehensive solution for identifying and customizing trending topics across various social media platforms. Its modular architecture, efficient scraping mechanisms, and advanced analysis techniques make it a valuable tool for content creators, marketers, and social media enthusiasts.
 
 
-
+There is also some additional features
+ • Getting the past and present trends of a specific country
+ • Scraping google trends to get the relevents search topics
 
